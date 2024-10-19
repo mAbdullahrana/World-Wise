@@ -11,26 +11,37 @@ import CityList from "./Componets/CityList";
 import CountryList from "./Componets/CountryList";
 import City from "./Componets/City";
 import Form from "./Componets/Form";
+import { FakeAuthContextProvider } from "./Contexts/FakeAuthContext";
+import ProtectedRoute from "./Pages/ProtectedRoute";
 
 function App() {
   return (
     <CitiesProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route index element={<HomePage />} />
-          <Route path="app" element={<AppLayout />}>
-            <Route index element={<Navigate replace to="cities" />} />
-            <Route path="cities" element={<CityList />} />
-            <Route path="cities/:id" element={<City />} />
-            <Route path="countries" element={<CountryList />} />
-            <Route path="form" element={<Form />} />
-          </Route>
-          <Route path="product" element={<Product />} />
-          <Route path="pricing" element={<Pricing />} />
-          <Route path="login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <FakeAuthContextProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route index element={<HomePage />} />
+            <Route path="product" element={<Product />} />
+            <Route path="pricing" element={<Pricing />} />
+            <Route path="login" element={<Login />} />
+            <Route
+              path="app"
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Navigate replace to="cities" />} />
+              <Route path="cities" element={<CityList />} />
+              <Route path="cities/:id" element={<City />} />
+              <Route path="countries" element={<CountryList />} />
+              <Route path="form" element={<Form />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </FakeAuthContextProvider>
     </CitiesProvider>
   );
 }
