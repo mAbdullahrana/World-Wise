@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 const BASE_URL = "http://localhost:9000";
 const CitiesContext = createContext();
@@ -25,19 +25,24 @@ function CitiesProvider({ children }) {
     fetchCities();
   }, []);
 
-  async function getCity(id) {
-    try {
-      setIsLoading(true);
-      const res = await fetch(`${BASE_URL}/cities/${id}`);
-      const data = await res.json();
+  const getCity = useCallback(
+    async function getCity(id) {
+      if (+id === currentCity.id) return;
 
-      setCurrentCity(data);
-    } catch {
-      alert("Something went wrong in City Details fetching");
-    } finally {
-      setIsLoading(false);
-    }
-  }
+      try {
+        setIsLoading(true);
+        const res = await fetch(`${BASE_URL}/cities/${id}`);
+        const data = await res.json();
+
+        setCurrentCity(data);
+      } catch {
+        alert("Something went wrong in City Details fetching");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [currentCity.id]
+  );
   async function createCity(newCity) {
     try {
       setIsLoading(true);

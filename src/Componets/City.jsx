@@ -18,7 +18,7 @@ function City() {
   const { getCity, currentCity, isLoading } = useCitiesContext();
   useEffect(() => {
     getCity(id);
-  }, [id]);
+  }, [id, getCity]);
   // TEMP DATA
   // const currentCity = {
   //   cityName: "Lisbon",
